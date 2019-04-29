@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -40,89 +41,85 @@ import cz.msebera.android.httpclient.Header;
 public class SupraveghereActivity extends AppCompatActivity {
     public static final String TAG = "SupraveghereActivity";
 
-    private Button getLastMotion;
-    private Button startMotionDetectorSensor;
+    private Button listAllMotions;
+
+    private SupraveghereAdapter supraveghereAdapter;
+    private ArrayAdapter<String> adapter;
 
     private ArrayList<MotionSensor> motionSensors;
+    private ArrayList<MotionSensor> motionSensorsFromDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supraveghere);
 
-        Log.d(TAG, "onCreate: activity created");
-
         motionSensors = new ArrayList<>();
+        motionSensorsFromDB = new ArrayList<>();
 
-        reqMotionSensorEntrance("http://192.168.100.11:8080/motion/latest");
-        getLastMotion = (Button) findViewById(R.id.motionListButton);
-        getLastMotion.setOnClickListener(new View.OnClickListener() {
+        supraveghereAdapter = new SupraveghereAdapter(this, motionSensors);
+
+        reqMotionSensorEntries("http://192.168.100.11:8080/motion/all");
+
+        listAllMotions = (Button) findViewById(R.id.motionListButton);
+        listAllMotions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: button clicked");
                 startActivity(new Intent(SupraveghereActivity.this, MotionSensorList.class)
-                        .putExtra("motion_sensors", motionSensors));
+                        .putExtra("motion_sensors", motionSensorsFromDB));
             }
         });
 
-        startMotionDetectorSensor = (Button) findViewById(R.id.startMotionSensor);
-        startMotionDetectorSensor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Snackbar.make(findViewById(R.id.coordinatorSupraveghere), R.string.startMotionSensorDetect,
-                        Snackbar.LENGTH_LONG)
-                        .show();
-            }
-        });
     }
 
-    private void reqMotionSensorEntrance(String url) {
+    private void reqMotionSensorEntries(String url) {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)
-                .get()
                 .build();
 
         Call call = client.newCall(request);
-        call.enqueue(new Callback(){
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                Log.d(TAG, "onResponse: server responded");
-                try {
-
-                    String json = response.body().string();
-                    Log.d(TAG, "onResponse: json -> " + json);
-                    JSONObject resObj = new JSONObject(json);
-                    long id = resObj.getLong("id");
-                    String alertText = resObj.getString("alertText");
-                    long timeStamp = resObj.getLong("timeStamp");
-
-                    final MotionSensor motionSensor = new MotionSensor();
-                    motionSensor.setId(id);
-                    motionSensor.setAlertText(alertText);
-                    motionSensor.setTimeStamp(timeStamp);
-
-                    runOnUiThread(new Runnable(){
-                        @Override
-                        public void run() {
-                            motionSensors.add(motionSensor);
-                            Log.d(TAG, "run: added sensor -> " + motionSensor.getId());
-                        }});
-
-                } catch(JSONException e) {
-
-                }
-
-                Log.d(TAG, "onResponse: done fetching data");
-            }
-
+        call.enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
 
             }
-        });
 
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String json = response.body().string();
+
+                try {
+
+                    JSONArray array = new JSONArray(json);
+                    Log.d(TAG, "onResponse: json -> " + json);
+                    int size = array.length();
+
+                    for (int i = 0; i < size; i++) {
+                        JSONObject object = array.getJSONObject(i);
+                        Log.d(TAG, "onResponse: object -> " + object);
+                        MotionSensor motionSensor = new MotionSensor();
+
+                        motionSensor.setId(Long.parseLong(object.getString("id")));
+                        motionSensor.setAlertText(object.getString("alertText"));
+                        motionSensor.setTimeStamp(Long.parseLong(object.getString("timeStamp")));
+
+                        motionSensorsFromDB.add(motionSensor);
+                        Log.d(TAG, "onResponse: added item -> " + motionSensor.getId());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                supraveghereAdapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                    Log.d(TAG, "onResponse: items in list -> " + motionSensorsFromDB.size());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 }

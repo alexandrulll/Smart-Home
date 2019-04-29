@@ -5,6 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -34,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         motionSensors = new ArrayList<>();
-        //reqMotionSensorEntrance("http://192.168.100.11:8080/motion/start");
 
         achizitieButton = (Button) findViewById(R.id.butonAchizitie);
         achizitieButton.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +63,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void reqMotionSensorEntrance(String url) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.motionSensorStart:
+                reqStartMotionSensor("http://192.168.100.11:8080/motion/start");
+                return  true;
+            case R.id.about:
+                return  true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void reqStartMotionSensor(String url) {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -76,23 +98,13 @@ public class MainActivity extends AppCompatActivity {
                 try {
 
                     String json = response.body().string();
-                    JSONObject resObj = new JSONObject(json);
-                    long id = resObj.getLong("id");
-                    String alertText = resObj.getString("alertText");
-                    long timeStamp = resObj.getLong("timeStamp");
-
-                    final MotionSensor motionSensor = new MotionSensor();
-                    motionSensor.setId(id);
-                    motionSensor.setAlertText(alertText);
-                    motionSensor.setTimeStamp(timeStamp);
 
                     runOnUiThread(new Runnable(){
                         @Override
                         public void run() {
-                            motionSensors.add(motionSensor);
                         }});
 
-                } catch(JSONException e) {
+                } catch(Exception e) {
 
                 }
             }

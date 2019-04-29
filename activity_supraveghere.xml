@@ -8,7 +8,7 @@
     tools:context=".SupraveghereActivity">
 
     <Button
-        android:id="@+id/motionListButton"
+        android:id="@+id/lastMotionSensorIntruder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -17,10 +17,10 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="@string/listaIntrusi" />
+        android:text="@string/ultimulIntrus" />
 
     <Button
-        android:id="@+id/allMotionSensorTriggers"
+        android:id="@+id/motionListButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -29,16 +29,5 @@
         android:layout_marginTop="69dp"
         android:layout_marginBottom="50dp"
         android:text="@string/allMotionSensor" />
-
-    <Button
-        android:id="@+id/startMotionSensor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="75dp"
-        android:layout_marginTop="135dp"
-        android:layout_marginBottom="50dp"
-        android:text="@string/startMotionSensor" />
 
 </android.support.design.widget.CoordinatorLayout>
