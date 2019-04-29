@@ -25,6 +25,7 @@ import okhttp3.Response;
 public class HumidityDetailsActivity extends AppCompatActivity {
 
     public static final String TAG = "HumidityDetailsActivity";
+
     private Button currentHumidityButton;
     private Button humidityListButton;
 
@@ -39,36 +40,13 @@ public class HumidityDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_humidity_details);
 
-        Log.d(TAG, "onCreate: activity created");
-
         humidities = new ArrayList<>();
+        humiditiesFromDB = new ArrayList<>();
 
         humidityAdapter = new HumidityAdapter(this, humidities);
 
         reqCurrentHumidity("http://192.168.100.11:8080/humidity/save");
-        currentHumidityButton = (Button) findViewById(R.id.currentHumidityButton);
-        currentHumidityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: button clicked");
-                startActivity(new Intent(HumidityDetailsActivity.this, CurrentHumidity.class)
-                        .putExtra("current_humidity", humidities));
 
-            }
-        });
-
-        humiditiesFromDB = new ArrayList<>();
-
-        reqHumidityEntries("http://192.168.100.11:8080/humidity/all");
-        humidityListButton = (Button) findViewById(R.id.humidityListButton);
-
-        humidityListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HumidityDetailsActivity.this, HumidityListActivity.class)
-                .putExtra("humidity_list", humiditiesFromDB));
-            }
-        });
     }
 
     private void reqHumidityEntries(String url) {
@@ -119,6 +97,16 @@ public class HumidityDetailsActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                humidityListButton = (Button) findViewById(R.id.humidityListButton);
+                humidityListButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(HumidityDetailsActivity.this, HumidityListActivity.class)
+                                .putExtra("humidity_list", humiditiesFromDB));
+                    }
+                });
+
             }
         });
     }
@@ -161,7 +149,19 @@ public class HumidityDetailsActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             humidities.add(humidity);
+                            humidityAdapter.notifyDataSetChanged();
                             Log.d(TAG, "run: added sensor -> " + humidity.getId());
+
+                            currentHumidityButton = (Button) findViewById(R.id.currentHumidityButton);
+                            currentHumidityButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    reqHumidityEntries("http://192.168.100.11:8080/humidity/all");
+                                    startActivity(new Intent(HumidityDetailsActivity.this, CurrentHumidity.class)
+                                            .putExtra("current_humidity", humidities));
+
+                                }
+                            });
                         }});
 
                 } catch(JSONException e) {

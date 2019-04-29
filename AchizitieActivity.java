@@ -13,6 +13,7 @@ public class AchizitieActivity extends AppCompatActivity {
     private Button humidityDetails;
     private Button lightDetails;
     private Button temperatureDetails;
+    private Button dustDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,15 @@ public class AchizitieActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AchizitieActivity.this, TemperatureDetailsActivity.class
+                ));
+            }
+        });
+
+        dustDetails = (Button) findViewById(R.id.dustInfoButton);
+        dustDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AchizitieActivity.this, DustDetailsActivity.class
                 ));
             }
         });

@@ -22,33 +22,34 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class LightDetailsActivity extends AppCompatActivity {
+public class DustDetailsActivity extends AppCompatActivity {
 
-    public static final String TAG = "LightDetailsActivity";
+    public static final String TAG = "DustDetails";
 
-    private Button currentLightButton;
-    private Button allLightButton;
+    private Button currentDustButton;
+    private Button dustListButton;
 
-    private LightAdapter lightAdapter;
+    private DustAdapter dustAdapter;
 
     private ArrayAdapter<String> adapter;
-    private ArrayList<Light> lights;
-    private ArrayList<Light> lightsFromDB;
+    private ArrayList<Dust> dusts;
+    private ArrayList<Dust> dustsFromDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_light_details);
+        setContentView(R.layout.activity_dust_details);
 
-        lights = new ArrayList<>();
-        lightsFromDB = new ArrayList<>();
+        dusts = new ArrayList<>();
+        dustsFromDB = new ArrayList<>();
 
-        lightAdapter = new LightAdapter(this, lights);
+        dustAdapter = new DustAdapter(this, dusts);
 
-        reqCurrentLight("http://192.168.100.11:8080/tsl/save");
+        reqCurrentDust("http://192.168.100.11:8080/dust/save");
+
     }
 
-    private void reqLightEntries(String url) {
+    private void reqDustEntries(String url) {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -75,43 +76,44 @@ public class LightDetailsActivity extends AppCompatActivity {
                     for (int i = 0; i < size; i++) {
                         JSONObject object = array.getJSONObject(i);
                         Log.d(TAG, "onResponse: object -> " + object);
+                        Dust dust = new Dust();
 
-                        Light light = new Light();
+                        dust.setId(Long.parseLong(object.getString("id")));
+                        dust.setDensityUnit(object.getString("densityUnit"));
+                        dust.setDustDesnsity(Float.parseFloat(object.getString("dustDesnsity")));
+                        dust.setVoltageUnit(object.getString("voltageUnit"));;
+                        dust.setVoltage(Float.parseFloat(object.getString("voltage")));
+                        dust.setTimeStamp(Long.parseLong(object.getString("timeStamp")));
 
-                        light.setId(Long.parseLong(object.getString("id")));
-                        light.setFullSpectrum(Double.parseDouble(object.getString("fullSpectrum")));
-                        light.setVisibleSpectrum(Double.parseDouble(object.getString("visibleSpectrum")));
-                        light.setInfraredSpectrum(Double.parseDouble(object.getString("infraredSpectrum")));
-                        light.setTimeStamp(Long.parseLong(object.getString("timeStamp")));
-                        light.setMeasureUnit(object.getString("measureUnit"));
-
-                        lightsFromDB.add(light);
-                        Log.d(TAG, "onResponse: added item -> " + light.getId());
+                        dustsFromDB.add(dust);
+                        Log.d(TAG, "onResponse: added item -> " + dust.getId());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                lightAdapter.notifyDataSetChanged();
+                                dustAdapter.notifyDataSetChanged();
                             }
                         });
                     }
-                    Log.d(TAG, "onResponse: items in list -> " + lightsFromDB.size());
+                    Log.d(TAG, "onResponse: items in list -> " + dustsFromDB.size());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                allLightButton = (Button) findViewById(R.id.lightListButton);
-                allLightButton.setOnClickListener(new View.OnClickListener() {
+                dustListButton = (Button) findViewById(R.id.dustListButton);
+                dustListButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(LightDetailsActivity.this, LightListActivity.class)
-                                .putExtra("light_list", lightsFromDB));
+                        startActivity(new Intent(DustDetailsActivity.this, DustListActivity.class)
+                                .putExtra("dust_list", dustsFromDB));
                     }
                 });
+
             }
         });
     }
 
-    private void reqCurrentLight(String url) {
+
+    private void reqCurrentDust(String url) {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -132,41 +134,43 @@ public class LightDetailsActivity extends AppCompatActivity {
                     JSONObject resObj = new JSONObject(json);
 
                     long id = resObj.getLong("id");
-                    double fullSpectrum = resObj.getDouble("fullSpectrum");
-                    double infraredSpectrum = resObj.getDouble("infraredSpectrum");
-                    double visibleSpectrum = resObj.getDouble("visibleSpectrum");
+                    float dustDesnsity = (float) resObj.getLong("dustDesnsity");
+                    float voltage = (float) resObj.getLong("voltage");
                     long timeStamp = resObj.getLong("timeStamp");
-                    String measureUnit = resObj.getString("measureUnit");
+                    String densityUnit = resObj.getString("densityUnit");
+                    String voltageUnit = resObj.getString("voltageUnit");
 
-                    final Light light = new Light();
-                    light.setId(id);
-                    light.setMeasureUnit(measureUnit);
-                    light.setTimeStamp(timeStamp);
-                    light.setFullSpectrum(fullSpectrum);
-                    light.setInfraredSpectrum(infraredSpectrum);
-                    light.setVisibleSpectrum(visibleSpectrum);
+                    final Dust dust = new Dust();
+
+                    dust.setId(id);
+                    dust.setVoltage(voltage);
+                    dust.setDustDesnsity(dustDesnsity);
+                    dust.setDensityUnit(densityUnit);
+                    dust.setVoltageUnit(voltageUnit);
+                    dust.setTimeStamp(timeStamp);
 
                     runOnUiThread(new Runnable(){
                         @Override
                         public void run() {
-                            lights.add(light);
-                            Log.d(TAG, "run: added sensor -> " + light.getId());
+                            dusts.add(dust);
+                            dustAdapter.notifyDataSetChanged();
+                            Log.d(TAG, "run: added sensor -> " + dust.getId());
+
+                            currentDustButton = (Button) findViewById(R.id.currentDustButton);
+                            currentDustButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    reqDustEntries("http://192.168.100.11:8080/dust/all");
+                                    startActivity(new Intent(DustDetailsActivity.this, CurrentDustActivity.class)
+                                            .putExtra("current_dust", dusts));
+
+                                }
+                            });
                         }});
 
                 } catch(JSONException e) {
 
                 }
-                currentLightButton = (Button) findViewById(R.id.currentLightButton);
-                currentLightButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.d(TAG, "onClick: button clicked");
-                        reqLightEntries("http://192.168.100.11:8080/tsl/all");
-                        startActivity(new Intent(LightDetailsActivity.this, CurrentLightActivity.class)
-                                .putExtra("current_light", lights));
-
-                    }
-                });
 
                 Log.d(TAG, "onResponse: done fetching data");
             }

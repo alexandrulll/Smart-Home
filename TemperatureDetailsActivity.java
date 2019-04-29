@@ -40,35 +40,12 @@ public class TemperatureDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temperature_details);
 
-        Log.d(TAG, "onCreate: activity created");
-
         temperatures = new ArrayList<>();
+        temperaturesFromDB = new ArrayList<>();
 
         temperatureAdapter = new TemperatureAdapter(this, temperatures);
 
         reqCurrentTemperature("http://192.168.100.11:8080/temperature/save");
-        currentTemperatureButton = (Button) findViewById(R.id.currentTemperatureButton);
-        currentTemperatureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: button clicked");
-                startActivity(new Intent(TemperatureDetailsActivity.this, CurrentTemperatureActivity.class)
-                        .putExtra("current_temperature", temperatures));
-
-            }
-        });
-
-        temperaturesFromDB = new ArrayList<>();
-
-        reqTemperatureEntries("http://192.168.100.11:8080/temperature/all");
-        temperatureListButton = (Button) findViewById(R.id.temperatureListButton);
-        temperatureListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(TemperatureDetailsActivity.this, TemperatureListActivity.class)
-                        .putExtra("temperature_list", temperaturesFromDB));
-            }
-        });
     }
 
     private void reqTemperatureEntries(String url) {
@@ -119,6 +96,15 @@ public class TemperatureDetailsActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                temperatureListButton = (Button) findViewById(R.id.temperatureListButton);
+                temperatureListButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(TemperatureDetailsActivity.this, TemperatureListActivity.class)
+                                .putExtra("temperature_list", temperaturesFromDB));
+                    }
+                });
             }
         });
     }
@@ -167,6 +153,17 @@ public class TemperatureDetailsActivity extends AppCompatActivity {
                 } catch(JSONException e) {
 
                 }
+
+                currentTemperatureButton = (Button) findViewById(R.id.currentTemperatureButton);
+                currentTemperatureButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        reqTemperatureEntries("http://192.168.100.11:8080/temperature/all");
+                        startActivity(new Intent(TemperatureDetailsActivity.this, CurrentTemperatureActivity.class)
+                                .putExtra("current_temperature", temperatures));
+
+                    }
+                });
 
                 Log.d(TAG, "onResponse: done fetching data");
             }
