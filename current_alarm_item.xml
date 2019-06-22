@@ -7,7 +7,7 @@
     android:layout_marginTop="16dp"
     android:elevation="4dp"
     android:orientation="vertical"
-    android:background="#BBB6DF">
+    android:background="#FF715B">
 
     <TextView
         android:id="@+id/tv_separator_1"
@@ -34,7 +34,7 @@
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/dustId"
+            android:id="@+id/alarmId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -58,18 +58,18 @@
             android:textSize="16sp"
             android:layout_marginStart="16dp"
             android:textStyle="bold"
-            android:text="Dust Desnsity: "
+            android:text="Alarm Label: "
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/dustDesnsity"
+            android:id="@+id/alarmLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#000000"
             android:textSize="16sp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Dust Desnsity" />
+            android:text="Alarm Label" />
 
     </LinearLayout>
 
@@ -87,18 +87,18 @@
             android:layout_marginStart="16dp"
 
             android:textStyle="bold"
-            android:text="Timestamp: "
+            android:text="Entity: "
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/dustTimeStamp"
+            android:id="@+id/generatingEntity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#000000"
             android:textSize="16sp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Timestamp" />
+            android:text="Entity" />
 
     </LinearLayout>
 
@@ -115,74 +115,18 @@
             android:textSize="16sp"
             android:layout_marginStart="16dp"
             android:textStyle="bold"
-            android:text="Density Unit: "
+            android:text="Value: "
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/densityUnit"
+            android:id="@+id/generatingValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#000000"
             android:textSize="16sp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Density Unit" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            android:layout_marginStart="16dp"
-            android:textStyle="bold"
-            android:text="Voltage: "
-            tools:ignore="HardcodedText" />
-
-        <TextView
-            android:id="@+id/voltage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            android:layout_marginEnd="16dp"
-            android:text="Voltage" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            android:layout_marginStart="16dp"
-            android:textStyle="bold"
-            android:text="Voltage Unit: "
-            tools:ignore="HardcodedText" />
-
-        <TextView
-            android:id="@+id/voltageUnit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            android:layout_marginEnd="16dp"
-            android:text="Voltage Unit" />
+            android:text="Value" />
 
     </LinearLayout>
 

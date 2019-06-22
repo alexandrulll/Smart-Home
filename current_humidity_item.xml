@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="16dp"
     android:elevation="4dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#59C9A5">
 
     <TextView
         android:id="@+id/tv_separator_1"
