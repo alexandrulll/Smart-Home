@@ -100,7 +100,6 @@ public class TemperatureListActivity extends AppCompatActivity {
         x.setTextColor(Color.BLACK);
 
         YAxis y = chart.getAxisLeft();
-        // y.setTypeface(tfLight);
         y.setLabelCount(6, false);
         y.setTextColor(Color.BLACK);
         y.setTextSize(12f);
@@ -133,7 +132,6 @@ public class TemperatureListActivity extends AppCompatActivity {
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
         } else {
-            // create a dataset and give it a type
             set1 = new LineDataSet(values, "DataSet 1");
 
             set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
@@ -155,12 +153,10 @@ public class TemperatureListActivity extends AppCompatActivity {
                 }
             });
 
-            // create a data object with the data sets
             LineData data = new LineData(set1);
             data.setValueTextSize(9f);
             data.setDrawValues(false);
 
-            // set data
             chart.setData(data);
         }
     }

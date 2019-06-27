@@ -32,20 +32,6 @@ public class HumidityAdapter extends RecyclerView.Adapter<HumidityAdapter.ViewHo
         }
     }
 
-    public HumidityAdapter(Context context, ArrayList<Humidity> humidities) {
-        this.humidities = humidities;
-        this.context = context;
-    }
-
-    @NonNull
-    @Override
-    public HumidityAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View itemView = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.current_humidity_item, viewGroup, false);
-
-        return new HumidityAdapter.ViewHolder(itemView);
-    }
-
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final HumidityAdapter.ViewHolder viewHolder, int i) {
@@ -59,6 +45,20 @@ public class HumidityAdapter extends RecyclerView.Adapter<HumidityAdapter.ViewHo
         viewHolder.textViewMeasureUnit.setText(String.valueOf(humidity.getMeasureUnit()));
         viewHolder.textViewSensorName.setText(String.valueOf(humidity.getSensorName()));
 
+    }
+
+    public HumidityAdapter(Context context, ArrayList<Humidity> humidities) {
+        this.humidities = humidities;
+        this.context = context;
+    }
+
+    @NonNull
+    @Override
+    public HumidityAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View itemView = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.current_humidity_item, viewGroup, false);
+
+        return new HumidityAdapter.ViewHolder(itemView);
     }
 
     @Override

@@ -1,16 +1,22 @@
 package com.example.licenta;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import cz.msebera.android.httpclient.Header;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,15 +27,22 @@ import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.BufferedSink;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String TAG = "HumidityListActivity";
 
     private Button controlButton;
     private Button achizitieButton;
     private Button supraveghereButton;
+    private Button configurare;
 
     private AlarmAdapter alarmAdapter;
     private ArrayAdapter<String> adapter;
@@ -49,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         alarmAdapter = new AlarmAdapter(this, alarms);
 
-        reqAlarmEntries("http://192.168.100.11:8080/alarms");
+        reqAlarmEntries("http://192.168.100.11:8080/api/alarms");
 
         achizitieButton = (Button) findViewById(R.id.butonAchizitie);
         achizitieButton.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +85,32 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, SupraveghereActivity.class));
+            }
+        });
+
+        configurare = findViewById(R.id.btn_config);
+
+        configurare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final AlarmConfigDialog dialog = new AlarmConfigDialog(MainActivity.this);
+                dialog.create();
+                dialog.show();
+
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        if (dialog.isDonePressed()) {
+                            TemperatureAlarmConfig config = new TemperatureAlarmConfig();
+                            config.setAlarmLabel(dialog.getLabel());
+                            config.setGeneratingEntity(dialog.getGenEntityVal());
+                            config.setValue(dialog.getVal());
+                            config.setValue(1);
+
+                            updateAlarmConfig("http://192.168.100.11:8080/api/alarms/config", config);
+                        }
+                    }
+                });
             }
         });
     }
@@ -181,4 +220,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void updateAlarmConfig(String url, TemperatureAlarmConfig config) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        final RequestParams params = new RequestParams();
+
+        params.put("value", config.getValue());
+        params.put("alarmLabel", config.getAlarmLabel());
+        params.put("generatingEntity", config.getGeneratingEntity());
+        params.put("id", config.getId());
+        client.post(url, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if (statusCode == 200) {
+
+                    Log.d(TAG, "json " + params);
+
+                    Intent returnIntent = getIntent();
+                    setResult(RESULT_OK, returnIntent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+            }
+        });
+    }
 }
