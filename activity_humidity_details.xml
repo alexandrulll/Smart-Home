@@ -15,6 +15,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="75dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/btn_round_accent"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="@color/white"
         android:layout_marginBottom="16dp"
         android:text="@string/allHumidity" />
 
@@ -24,6 +28,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:background="@drawable/btn_round_accent"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="@color/white"
         android:layout_marginStart="50dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="50dp"
