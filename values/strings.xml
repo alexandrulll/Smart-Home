@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Licenta</string>
+    <string name="buttonAchizitie">Achizitie De Date</string>
+    <string name="buttonSupraveghere">Supraveghere</string>
+    <string name="buttonControl">Control</string>
+    <string name="buttonFirstRelayOn">Pornire Siguranta 1</string>
+    <string name="buttonFirstRelayOff">Oprire Siguranta 1</string>
+    <string name="buttonSecondRelayOn">Pornire Siguranta 2</string>
+    <string name="buttonSecondRelayOff">Oprire Siguranta 2</string>
+    <string name="firstRelayOn">Echipamentul conectat la Releul 1 a pornit</string>
+    <string name="firstRelayOff">Echipamentul conectat la Releul 1 a incetat functionare</string>
+    <string name="secondRelayOn">Echipamentul conectat la Releul 2 a pornit</string>
+    <string name="secondRelayOff">Echipamentul conectat la Releul 2 a incetat functionare</string>
+    <string name="ultimulIntrus">Ultima declansare a senzorului de miscare</string>
+    <string name="startMotionSensor">Pornire Senzor de miscare</string>
+    <string name="allMotionSensor">Lista Declansari ale Senzorului</string>
+    <string name="humidityInfo">Detalii Umiditate</string>
+    <string name="temperatureInfo">Detalii Temperatura</string>
+    <string name="lightInfo">Detalii Intensitate Luminoasa</string>
+    <string name="dustInfo">Detalii Calitatea Aerului</string>
+    <string name="lastHumidity">Ultima valoare inregistrata de senzor</string>
+    <string name="currentHumidity">Valoare curenta a umiditatii</string>
+    <string name="allHumidity">Lista valori ale umiditatii</string>
+    <string name="currentTemperature">Valoare curenta a temperaturii</string>
+    <string name="allTemperature">Lista valori ale temperaturii</string>
+    <string name="currentLight">Valoare curenta a luminozitatii</string>
+    <string name="allLight">Lista valori ale luminozitatii</string>
+    <string name="currentDust">Valoare curenta a calitatii aerului</string>
+    <string name="allDust">Lista valori pentru sensor calitate aer</string>
+    <string name="startMotionSensorDetect">Senzorul de miscare a pornit</string>
+
+</resources>
