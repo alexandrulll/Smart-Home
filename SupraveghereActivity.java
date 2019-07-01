@@ -59,7 +59,7 @@ public class SupraveghereActivity extends AppCompatActivity {
 
         supraveghereAdapter = new SupraveghereAdapter(this, motionSensors);
 
-        reqMotionSensorEntries("http://192.168.100.11:8080/motion/all");
+        reqMotionSensorEntries("http://192.168.0.100:8080/motion/all");
 
         listAllMotions = (Button) findViewById(R.id.motionListButton);
         listAllMotions.setOnClickListener(new View.OnClickListener() {

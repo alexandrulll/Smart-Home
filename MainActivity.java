@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -27,13 +28,9 @@ import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
-import okio.BufferedSink;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private Button achizitieButton;
     private Button supraveghereButton;
     private Button configurare;
+    private RelativeLayout loading;
 
     private AlarmAdapter alarmAdapter;
     private ArrayAdapter<String> adapter;
@@ -61,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
         alarms = new ArrayList<>();
 
         alarmAdapter = new AlarmAdapter(this, alarms);
-
-        reqAlarmEntries("http://192.168.100.11:8080/api/alarms");
 
         achizitieButton = (Button) findViewById(R.id.butonAchizitie);
         achizitieButton.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +86,11 @@ public class MainActivity extends AppCompatActivity {
 
         configurare = findViewById(R.id.btn_config);
 
+        loading = findViewById(R.id.rl_loading);
+        loading.setVisibility(View.VISIBLE);
+
+        reqAlarmEntries("http://192.168.0.100:8080/api/alarms");
+
         configurare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                             config.setValue(dialog.getVal());
                             config.setValue(1);
 
-                            updateAlarmConfig("http://192.168.100.11:8080/api/alarms/config", config);
+                            updateAlarmConfig("http://192.168.0.100:8080/api/alarms/config", config);
                         }
                     }
                 });
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.motionSensorStart:
-                reqStartMotionSensor("http://192.168.100.11:8080/motion/start");
+                reqStartMotionSensor("http://192.168.0.100:8080/motion/start");
                 return  true;
             case R.id.alarmList:
                 startActivity(new Intent(MainActivity.this, AlarmListActivity.class)
@@ -174,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 alarmAdapter.notifyDataSetChanged();
+                                loading.setVisibility(View.GONE);
                             }
                         });
                     }

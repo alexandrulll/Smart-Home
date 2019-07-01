@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +33,7 @@ public class DustDetailsActivity extends AppCompatActivity {
 
     private Button currentDustButton;
     private Button dustListButton;
+    private RelativeLayout loading;
 
     private DustAdapter dustAdapter;
 
@@ -49,8 +51,10 @@ public class DustDetailsActivity extends AppCompatActivity {
 
         dustAdapter = new DustAdapter(this, dusts);
 
-        reqCurrentDust("http://192.168.100.11:8080/dust/save");
+        loading = findViewById(R.id.rl_loading);
+        loading.setVisibility(View.VISIBLE);
 
+        reqCurrentDust("http://192.168.0.100:8080/dust/save");
     }
 
     private void reqDustEntries(String url) {
@@ -177,12 +181,13 @@ public class DustDetailsActivity extends AppCompatActivity {
                             dusts.add(dust);
                             dustAdapter.notifyDataSetChanged();
                             Log.d(TAG, "run: added sensor -> " + dust.getId());
+                            loading.setVisibility(View.GONE);
 
                             currentDustButton = (Button) findViewById(R.id.currentDustButton);
                             currentDustButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    reqDustEntries("http://192.168.100.11:8080/dust/all");
+                                    reqDustEntries("http://192.168.0.100:8080/dust/all");
                                     startActivity(new Intent(DustDetailsActivity.this, CurrentDustActivity.class)
                                             .putExtra("current_dust", dusts));
 

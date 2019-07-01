@@ -30,7 +30,7 @@ public class ControlActivity extends AppCompatActivity {
             case R.id.buttonFirstRelayOn:
                 if (checked)
 
-                    reqRelayFirstSwitchOn("http://192.168.100.11:8080/relay/27/true");
+                    reqRelayFirstSwitchOn("http://192.168.0.100:8080/relay/27/true");
                     Snackbar.make(findViewById(R.id.myCoordinatorLayout), R.string.firstRelayOn,
                             Snackbar.LENGTH_LONG)
                             .show();
@@ -38,7 +38,7 @@ public class ControlActivity extends AppCompatActivity {
             case R.id.buttonFirstRelayOff:
                 if (checked)
 
-                    reqRelayFirstSwitchOff("http://192.168.100.11:8080/relay/27/false");
+                    reqRelayFirstSwitchOff("http://192.168.0.100:8080/relay/27/false");
                     Snackbar.make(findViewById(R.id.myCoordinatorLayout), R.string.firstRelayOff,
                             Snackbar.LENGTH_LONG)
                             .show();
@@ -46,7 +46,7 @@ public class ControlActivity extends AppCompatActivity {
             case R.id.buttonSecondRelayOn:
                 if (checked)
 
-                    reqRelaySecondSwitchOn("http://192.168.100.11:8080/relay/26/true");
+                    reqRelaySecondSwitchOn("http://192.168.0.100:8080/relay/26/true");
                     Snackbar.make(findViewById(R.id.myCoordinatorLayout), R.string.secondRelayOn,
                             Snackbar.LENGTH_LONG)
                             .show();
@@ -54,7 +54,7 @@ public class ControlActivity extends AppCompatActivity {
             case R.id.buttonSecondRelayOff:
                 if (checked)
 
-                    reqRelaySecondSwitchOff("http://192.168.100.11:8080/relay/26/false");
+                    reqRelaySecondSwitchOff("http://192.168.0.100:8080/relay/26/false");
                     Snackbar.make(findViewById(R.id.myCoordinatorLayout), R.string.secondRelayOff,
                             Snackbar.LENGTH_LONG)
                             .show();

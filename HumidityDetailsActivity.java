@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +29,7 @@ public class HumidityDetailsActivity extends AppCompatActivity {
 
     private Button currentHumidityButton;
     private Button humidityListButton;
+    private RelativeLayout loading;
 
     private HumidityAdapter humidityAdapter;
 
@@ -45,8 +47,10 @@ public class HumidityDetailsActivity extends AppCompatActivity {
 
         humidityAdapter = new HumidityAdapter(this, humidities);
 
-        reqCurrentHumidity("http://192.168.100.11:8080/humidity/save");
+        loading = findViewById(R.id.rl_loading);
+        loading.setVisibility(View.VISIBLE);
 
+        reqCurrentHumidity("http://192.168.0.100:8080/humidity/save");
     }
 
     private void reqHumidityEntries(String url) {
@@ -151,12 +155,13 @@ public class HumidityDetailsActivity extends AppCompatActivity {
                             humidities.add(humidity);
                             humidityAdapter.notifyDataSetChanged();
                             Log.d(TAG, "run: added sensor -> " + humidity.getId());
+                            loading.setVisibility(View.GONE);
 
                             currentHumidityButton = (Button) findViewById(R.id.currentHumidityButton);
                             currentHumidityButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    reqHumidityEntries("http://192.168.100.11:8080/humidity/all");
+                                    reqHumidityEntries("http://192.168.0.100:8080/humidity/all");
                                     startActivity(new Intent(HumidityDetailsActivity.this, CurrentHumidity.class)
                                             .putExtra("current_humidity", humidities));
 

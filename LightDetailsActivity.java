@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +29,7 @@ public class LightDetailsActivity extends AppCompatActivity {
 
     private Button currentLightButton;
     private Button allLightButton;
+    private RelativeLayout loading;
 
     private LightAdapter lightAdapter;
 
@@ -45,7 +47,10 @@ public class LightDetailsActivity extends AppCompatActivity {
 
         lightAdapter = new LightAdapter(this, lights);
 
-        reqCurrentLight("http://192.168.100.11:8080/tsl/save");
+        loading = findViewById(R.id.rl_loading);
+        loading.setVisibility(View.VISIBLE);
+
+        reqCurrentLight("http://192.168.0.100:8080/tsl/save");
     }
 
     private void reqLightEntries(String url) {
@@ -151,6 +156,7 @@ public class LightDetailsActivity extends AppCompatActivity {
                         public void run() {
                             lights.add(light);
                             Log.d(TAG, "run: added sensor -> " + light.getId());
+                            loading.setVisibility(View.GONE);
                         }});
 
                 } catch(JSONException e) {
@@ -161,7 +167,7 @@ public class LightDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Log.d(TAG, "onClick: button clicked");
-                        reqLightEntries("http://192.168.100.11:8080/tsl/all");
+                        reqLightEntries("http://192.168.0.100:8080/tsl/all");
                         startActivity(new Intent(LightDetailsActivity.this, CurrentLightActivity.class)
                                 .putExtra("current_light", lights));
 

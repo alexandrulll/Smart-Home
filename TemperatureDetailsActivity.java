@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +29,7 @@ public class TemperatureDetailsActivity extends AppCompatActivity {
 
     private Button currentTemperatureButton;
     private Button temperatureListButton;
+    private RelativeLayout loading;
 
     private TemperatureAdapter temperatureAdapter;
 
@@ -45,7 +47,10 @@ public class TemperatureDetailsActivity extends AppCompatActivity {
 
         temperatureAdapter = new TemperatureAdapter(this, temperatures);
 
-        reqCurrentTemperature("http://192.168.100.11:8080/temperature/save");
+        loading = findViewById(R.id.rl_loading);
+        loading.setVisibility(View.VISIBLE);
+
+        reqCurrentTemperature("http://192.168.0.100:8080/temperature/save");
     }
 
     private void reqTemperatureEntries(String url) {
@@ -148,6 +153,7 @@ public class TemperatureDetailsActivity extends AppCompatActivity {
                         public void run() {
                             temperatures.add(temperature);
                             Log.d(TAG, "run: added sensor -> " + temperature.getId());
+                            loading.setVisibility(View.GONE);
                         }});
 
                 } catch(JSONException e) {
@@ -158,7 +164,7 @@ public class TemperatureDetailsActivity extends AppCompatActivity {
                 currentTemperatureButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        reqTemperatureEntries("http://192.168.100.11:8080/temperature/all");
+                        reqTemperatureEntries("http://192.168.0.100:8080/temperature/all");
                         startActivity(new Intent(TemperatureDetailsActivity.this, CurrentTemperatureActivity.class)
                                 .putExtra("current_temperature", temperatures));
 
